@@ -1,0 +1,225 @@
+{
+  "name": "Initial RAID Log Generator",
+  "prompt": "",
+  "nodes": [
+    {
+      "id": "1",
+      "position": {
+        "x": -63.26574001179259,
+        "y": 140.4861581747858
+      },
+      "data": {
+        "label": "Deliverables and requirements documents",
+        "nodeKind": "input",
+        "purpose": "Primary project deliverables and requirements documents to analyse for RAID items."
+      }
+    },
+    {
+      "id": "2",
+      "position": {
+        "x": 237.6258043417415,
+        "y": 180.79546848325583
+      },
+      "data": {
+        "label": "RAID pre-fill rules",
+        "nodeKind": "reference",
+        "purpose": "Rules and guidance for identifying and classifying Risks, Assumptions, Issues, and Dependencies."
+      }
+    },
+    {
+      "id": "3",
+      "position": {
+        "x": -13.674926925918811,
+        "y": 336.5906289091871
+      },
+      "data": {
+        "label": "Draft SOWs per document",
+        "nodeKind": "llm",
+        "prompt": "You are a senior delivery consultant creating initial Statements of Work (SOWs) for UK public sector digital projects.\n\nInputs:\n- Deliverables and requirements documents: one or more project documents, potentially supplied as a ZIP/archive containing multiple deliverables/requirements documents. Treat EACH individual deliverables/requirements document/file as requiring its own SOW.\n- RAID pre-fill rules: rules for generating the RAID log section. Follow these closely.\n- Digital team rate card: use this to select valid roles and seniority bands for the team shape. Exact cost arithmetic will be calculated downstream, so focus on choosing realistic roles, bands, days/week, and durations.\n\nImportant human-in-the-loop requirement:\nThe AI output is an initial draft for human review, not a final commercial commitment. Make assumptions explicit and include review questions where a delivery manager, technical architect, commercial lead, or client stakeholder should validate the proposal.\n\nTask:\nFor EACH distinct source deliverables/requirements document, create exactly one SOW. Do not merge documents into a combined SOW. Do not create a single SOW pack. If the input archive contains 10 project documents, the JSON must contain 10 SOW objects. Use the source filename as sourceDocument wherever it is available.\n\nEach SOW must include:\n1. How a team would deliver the requirements: phases, delivery approach, governance, assurance, testing, and handover.\n2. Team shape: roles, seniority bands, quantity, days per week, duration in weeks, responsibilities, and rationale.\n3. Timeline: phased plan with week ranges, outcomes, and key review/checkpoint moments.\n4. Rough cost inputs: enough structured team data for downstream deterministic cost calculation using the rate card.\n5. RAID log: meaningful Risks, Assumptions, Issues, and Dependencies using the RAID rules.\n6. Human review notes: assumptions, open questions, and decisions needed before issuing a final SOW.\n\nUse ONLY these rateCardRole values in teamShape:\n- Delivery Manager\n- Product Manager\n- User Researcher\n- UX / Interaction Designer\n- Content Designer\n- Software Engineer\n- DevOps / Platform Engineer\n- Data Engineer\n- Data Scientist\n- BI / Data Analyst\n- Solution Architect\n- Cyber Security Architect\n- Solution Architect\n- Penetration Tester\n- QA / Test Engineer\n- Business Analyst\n\nUse ONLY these seniorityBand values in teamShape: Junior, Mid, Senior, Lead.\n\nCosting guidance:\n- Prefer realistic, lean teams rather than overstaffed teams.\n- Use part-time allocation where appropriate, e.g. 1-3 days/week for architecture, security, research, or delivery support.\n- Use durationWeeks and daysPerWeek consistently with the timeline.\n- Do not invent exact final prices. The next workflow step will calculate indicative costs from the rate card. You may include narrative cost assumptions.\n\nRAID guidance:\n- Generate the RAID log per SOW, not globally.\n- Assign IDs independently within each SOW: R001..., A001..., I001..., D001...\n- For Risks and Issues use severityPriority = High / Medium / Low.\n- For Assumptions and Dependencies use severityPriority = High / Medium / Low.\n- Avoid trivial, generic, duplicate, or padded RAID items.\n\nReturn ONLY valid JSON. Do not include markdown, commentary, code fences, or trailing text.\nThe top-level structure must be:\n{\n  \"sows\": [\n    {\n      \"sourceDocument\": \"source filename, e.g. 01-project-name.docx\",\n      \"projectName\": \"short project name\",\n      \"draftStatus\": \"Draft for human review\",\n      \"executiveSummary\": \"short paragraph\",\n      \"requirementsUnderstanding\": [\"bullet\", \"bullet\"],\n      \"deliveryApproach\": [\n        {\"phase\": \"Discovery / Inception\", \"description\": \"what the team will do\", \"outputs\": [\"output\"]}\n      ],\n      \"teamShape\": [\n        {\n          \"rateCardRole\": \"one of the allowed role names\",\n          \"seniorityBand\": \"Junior|Mid|Senior|Lead\",\n          \"quantity\": 1,\n          \"daysPerWeek\": 5,\n          \"durationWeeks\": 12,\n          \"responsibilities\": \"what this role will do\",\n          \"rationale\": \"why this role/level/allocation is needed\"\n        }\n      ],\n      \"timeline\": {\n        \"totalWeeks\": 12,\n        \"phases\": [\n          {\"phase\": \"Phase name\", \"startWeek\": 1, \"endWeek\": 2, \"keyActivities\": [\"activity\"], \"outcomes\": [\"outcome\"], \"reviewCheckpoint\": \"human/client checkpoint\"}\n        ]\n      },\n      \"costAssumptions\": [\"assumption\"],\n      \"raidLog\": [\n        {\n          \"id\": \"R001\",\n          \"category\": \"Risk|Assumption|Issue|Dependency\",\n          \"title\": \"max 10 words\",\n          \"description\": \"2-4 sentences grounded in the source document\",\n          \"severityPriority\": \"High|Medium|Low\",\n          \"rationale\": \"rule or trigger used\",\n          \"suggestedOwner\": \"role\"\n        }\n      ],\n      \"humanReviewNotes\": {\n        \"assumptionsToValidate\": [\"assumption\"],\n        \"openQuestions\": [\"question\"],\n        \"decisionsRequired\": [\"decision\"]\n      }\n    }\n  ]\n}",
+        "purpose": "Creates a draft Statement of Work for each deliverables/requirements document, including delivery approach, team, timeline, costs inputs, and RAID log.",
+        "inputPorts": [
+          {
+            "id": "p0",
+            "label": "deliverablesAndRequirementsDocuments"
+          },
+          {
+            "id": "p1",
+            "label": "rAIDPrefillRules"
+          },
+          {
+            "id": "p2",
+            "label": "digitalTeamRateCard"
+          }
+        ]
+      }
+    },
+    {
+      "id": "6",
+      "position": {
+        "x": 374.58267557251565,
+        "y": 234.42597017959625
+      },
+      "data": {
+        "label": "Digital team rate card",
+        "nodeKind": "reference",
+        "purpose": "Rate card used to calculate indicative costs for proposed SOW team shapes.",
+        "code": "function parseJson(raw) {\n  if (typeof raw !== 'string') return raw;\n  let text = raw.trim().replace(/^```(?:json)?\\s*/i, '').replace(/```$/i, '').trim();\n  return JSON.parse(text);\n}\n\nconst data = parseJson(costedSows);\nconst sows = Array.isArray(data) ? data : (data.sows || []);\nif (!Array.isArray(sows)) throw new Error('Expected costedSows to contain a sows array.');\n\nreturn sows;"
+      }
+    },
+    {
+      "id": "7",
+      "position": {
+        "x": 42.28700728837282,
+        "y": 461.12264776936547
+      },
+      "data": {
+        "label": "Calculate indicative SOW costs",
+        "nodeKind": "code",
+        "code": "function parseJson(raw, label) {\n  let text = typeof raw === 'string' ? raw.trim() : JSON.stringify(raw);\n  text = text.replace(/^```(?:json)?\\s*/i, '').replace(/```$/i, '').trim();\n  try {\n    return JSON.parse(text);\n  } catch (err) {\n    const objStart = text.indexOf('{');\n    const objEnd = text.lastIndexOf('}');\n    if (objStart >= 0 && objEnd > objStart) return JSON.parse(text.slice(objStart, objEnd + 1));\n    const arrStart = text.indexOf('[');\n    const arrEnd = text.lastIndexOf(']');\n    if (arrStart >= 0 && arrEnd > arrStart) return JSON.parse(text.slice(arrStart, arrEnd + 1));\n    throw new Error(`${label} was not valid JSON: ${err.message}`);\n  }\n}\n\nfunction parseMoney(value) {\n  if (value == null) return null;\n  const cleaned = String(value).replace(/[^0-9.]/g, '');\n  return cleaned ? Number(cleaned) : null;\n}\n\nfunction normalise(value) {\n  return String(value || '').trim().toLowerCase().replace(/\\s+/g, ' ');\n}\n\nfunction buildRateMap(rateCardText) {\n  const text = typeof rateCardText === 'string' ? rateCardText : JSON.stringify(rateCardText);\n  const start = text.indexOf('Role,Discipline,Seniority band');\n  if (start < 0) throw new Error('Could not find Rate Card table header.');\n\n  const endMarkers = ['Notes & assumptions', '--- Sheet: Cost Modeller ---'];\n  let end = text.length;\n  for (const marker of endMarkers) {\n    const idx = text.indexOf(marker, start);\n    if (idx > start && idx < end) end = idx;\n  }\n\n  const block = text.slice(start, end).trim();\n  const parsed = CSV.parse(block, { header: true, skipEmptyLines: true });\n  if (parsed.errors && parsed.errors.length) {\n    // Continue where possible; PapaParse may warn about trailing blank lines.\n  }\n\n  const rows = parsed.data || [];\n  const rates = new Map();\n  for (const row of rows) {\n    const keys = Object.keys(row);\n    const roleKey = keys.find(k => normalise(k) === 'role');\n    const seniorityKey = keys.find(k => normalise(k).includes('seniority band'));\n    const midKey = keys.find(k => normalise(k).includes('day rate') && normalise(k).includes('mid'));\n    if (!roleKey || !seniorityKey || !midKey) continue;\n\n    const role = row[roleKey];\n    const seniority = row[seniorityKey];\n    const rate = parseMoney(row[midKey]);\n    if (role && seniority && rate) {\n      rates.set(`${normalise(role)}|${normalise(seniority)}`, { role, seniority, midDayRate: rate });\n    }\n  }\n  return rates;\n}\n\nconst draft = parseJson(sowDraft, 'SOW draft');\nconst sows = Array.isArray(draft) ? draft : (draft.sows || []);\nif (!Array.isArray(sows)) throw new Error('Expected SOW draft to contain a sows array.');\n\nconst rateMap = buildRateMap(rateCard);\n\nconst costedSows = sows.map(sow => {\n  let totalCost = 0;\n  let weightedDayRateNumerator = 0;\n  let weightedDayRateDenominator = 0;\n  const pricingWarnings = [];\n\n  const teamShape = (sow.teamShape || []).map(member => {\n    const role = member.rateCardRole || member.role || '';\n    const seniority = member.seniorityBand || member.seniority || '';\n    const quantity = Number(member.quantity ?? 1) || 1;\n    const daysPerWeek = Number(member.daysPerWeek ?? 0) || 0;\n    const durationWeeks = Number(member.durationWeeks ?? sow.timeline?.totalWeeks ?? 0) || 0;\n    const key = `${normalise(role)}|${normalise(seniority)}`;\n    const match = rateMap.get(key);\n    const midDayRate = match?.midDayRate ?? parseMoney(member.midDayRate);\n\n    let lineCost = null;\n    if (midDayRate != null) {\n      lineCost = quantity * daysPerWeek * durationWeeks * midDayRate;\n      totalCost += lineCost;\n      weightedDayRateNumerator += quantity * daysPerWeek * midDayRate;\n      weightedDayRateDenominator += quantity * daysPerWeek;\n    } else {\n      pricingWarnings.push(`No mid-day rate found for ${role} / ${seniority}.`);\n    }\n\n    return {\n      ...member,\n      rateCardRole: role,\n      seniorityBand: seniority,\n      quantity,\n      daysPerWeek,\n      durationWeeks,\n      midDayRate,\n      lineCost\n    };\n  });\n\n  const totalWeeks = Number(sow.timeline?.totalWeeks ?? Math.max(0, ...teamShape.map(m => m.durationWeeks || 0))) || 0;\n  const indicativeMonthlyCost = totalWeeks > 0 ? totalCost / (totalWeeks / 4.345) : null;\n  const blendedTeamDayRate = weightedDayRateDenominator > 0 ? weightedDayRateNumerator / weightedDayRateDenominator : null;\n\n  return {\n    ...sow,\n    teamShape,\n    indicativeCosts: {\n      basis: 'Indicative only. Calculated from mid-day rates in the supplied digital team rate card. Excludes VAT, expenses, client-side costs, licences, hosting, procurement fees, and contingency unless explicitly stated.',\n      totalCost,\n      totalWeeks,\n      indicativeMonthlyCost,\n      blendedTeamDayRate,\n      pricingWarnings\n    }\n  };\n});\n\nreturn { sows: costedSows };",
+        "purpose": "Looks up mid-day rates from the rate card and calculates indicative team costs for each SOW.",
+        "inputPorts": [
+          {
+            "id": "p0",
+            "label": "sowDraft"
+          },
+          {
+            "id": "p1",
+            "label": "rateCard"
+          }
+        ]
+      }
+    },
+    {
+      "id": "10",
+      "position": {
+        "x": 33.237808510413885,
+        "y": 571.7861531930752
+      },
+      "data": {
+        "label": "Extract individual SOWs",
+        "nodeKind": "code",
+        "code": "function parseJson(raw) {\n  if (typeof raw !== 'string') return raw;\n  let text = raw.trim().replace(/^```(?:json)?\\s*/i, '').replace(/```$/i, '').trim();\n  return JSON.parse(text);\n}\n\nconst data = parseJson(costedSows);\nconst sows = Array.isArray(data) ? data : (data.sows || []);\nif (!Array.isArray(sows)) throw new Error('Expected costedSows to contain a sows array.');\n\nreturn sows;",
+        "purpose": "Converts the costed SOW collection into a JSON array so each SOW can become its own document.",
+        "inputPorts": [
+          {
+            "id": "p0",
+            "label": "costedSows"
+          }
+        ]
+      }
+    },
+    {
+      "id": "11",
+      "position": {
+        "x": -2.3686936173653237,
+        "y": 687.3681972094209
+      },
+      "data": {
+        "label": "One SOW per document",
+        "nodeKind": "fan-out",
+        "purpose": "Splits the SOW array so each source deliverables/requirements document is formatted as its own output document.",
+        "splitMode": "json",
+        "inputPorts": [
+          {
+            "id": "in",
+            "label": "input"
+          }
+        ]
+      }
+    },
+    {
+      "id": "12",
+      "position": {
+        "x": -4.671126256658269,
+        "y": 808.7721740151243
+      },
+      "data": {
+        "label": "Format individual SOW document",
+        "nodeKind": "code",
+        "code": "function parseJson(raw) {\n  if (typeof raw !== 'string') return raw;\n  let text = raw.trim().replace(/^```(?:json)?\\s*/i, '').replace(/```$/i, '').trim();\n  return JSON.parse(text);\n}\n\nfunction money(value) {\n  if (value == null || Number.isNaN(Number(value))) return 'TBC';\n  return '£' + Math.round(Number(value)).toLocaleString('en-GB');\n}\n\nfunction textList(items) {\n  if (!items || !items.length) return '- TBC / for human review\\n';\n  return items.map(item => `- ${String(item).replace(/\\n/g, ' ')}`).join('\\n') + '\\n';\n}\n\nfunction cell(value) {\n  return String(value ?? '').replace(/\\|/g, '\\\\|').replace(/\\n/g, '<br>');\n}\n\nconst sow = parseJson(sowItem);\n\nlet md = `# Statement of Work: ${cell(sow.projectName || sow.sourceDocument || 'Untitled project')}\\n\\n`;\nmd += '> **Status:** Initial AI-generated draft for human review. This document is intended to accelerate delivery, commercial, technical, and client review. It is not a final contractual Statement of Work, commitment to deliver, or fixed price. All scope, assumptions, timelines, team allocations, and costs should be validated by a human before issue.\\n\\n';\nmd += `**Source document:** ${cell(sow.sourceDocument || 'Unknown')}  \\n`;\nmd += `**Draft status:** ${cell(sow.draftStatus || 'Draft for human review')}\\n\\n`;\n\nmd += '## Executive summary\\n\\n';\nmd += `${sow.executiveSummary || 'TBC / for human review.'}\\n\\n`;\n\nmd += '## Understanding of requirements\\n\\n';\nmd += textList(sow.requirementsUnderstanding);\nmd += '\\n';\n\nmd += '## How the team would deliver\\n\\n';\nif (sow.deliveryApproach?.length) {\n  for (const phase of sow.deliveryApproach) {\n    md += `### ${cell(phase.phase || 'Phase')}\\n\\n`;\n    md += `${phase.description || ''}\\n\\n`;\n    if (phase.outputs?.length) {\n      md += '**Outputs**\\n';\n      md += textList(phase.outputs);\n      md += '\\n';\n    }\n  }\n} else {\n  md += 'TBC / for human review.\\n\\n';\n}\n\nmd += '## Team shape\\n\\n';\nmd += '| Role | Seniority | Qty | Days/week | Weeks | Mid day rate | Indicative line cost | Responsibilities | Rationale |\\n';\nmd += '|---|---:|---:|---:|---:|---:|---:|---|---|\\n';\nfor (const member of sow.teamShape || []) {\n  md += `| ${cell(member.rateCardRole)} | ${cell(member.seniorityBand)} | ${cell(member.quantity)} | ${cell(member.daysPerWeek)} | ${cell(member.durationWeeks)} | ${money(member.midDayRate)} | ${money(member.lineCost)} | ${cell(member.responsibilities)} | ${cell(member.rationale)} |\\n`;\n}\nmd += '\\n';\n\nmd += '## Timeline\\n\\n';\nmd += `**Indicative duration:** ${cell(sow.timeline?.totalWeeks || sow.indicativeCosts?.totalWeeks || 'TBC')} weeks\\n\\n`;\nmd += '| Phase | Start week | End week | Key activities | Outcomes | Review checkpoint |\\n';\nmd += '|---|---:|---:|---|---|---|\\n';\nfor (const phase of sow.timeline?.phases || []) {\n  md += `| ${cell(phase.phase)} | ${cell(phase.startWeek)} | ${cell(phase.endWeek)} | ${cell((phase.keyActivities || []).join('; '))} | ${cell((phase.outcomes || []).join('; '))} | ${cell(phase.reviewCheckpoint)} |\\n`;\n}\nmd += '\\n';\n\nmd += '## Rough indicative costs\\n\\n';\nmd += `- **Total indicative team cost:** ${money(sow.indicativeCosts?.totalCost)}\\n`;\nmd += `- **Indicative monthly cost:** ${money(sow.indicativeCosts?.indicativeMonthlyCost)}\\n`;\nmd += `- **Blended team day rate:** ${money(sow.indicativeCosts?.blendedTeamDayRate)}\\n`;\nmd += `- **Costing basis:** ${sow.indicativeCosts?.basis || 'Indicative only.'}\\n`;\nif (sow.indicativeCosts?.pricingWarnings?.length) {\n  md += '- **Pricing warnings:** ' + sow.indicativeCosts.pricingWarnings.join('; ') + '\\n';\n}\nif (sow.costAssumptions?.length) {\n  md += '\\n**Cost assumptions**\\n';\n  md += textList(sow.costAssumptions);\n}\nmd += '\\n';\n\nmd += '## RAID log\\n\\n';\nmd += '| ID | Category | Title | Severity / Priority | Description | Rationale | Suggested owner |\\n';\nmd += '|---|---|---|---|---|---|---|\\n';\nfor (const item of sow.raidLog || []) {\n  md += `| ${cell(item.id)} | ${cell(item.category)} | ${cell(item.title)} | ${cell(item.severityPriority)} | ${cell(item.description)} | ${cell(item.rationale)} | ${cell(item.suggestedOwner)} |\\n`;\n}\nmd += '\\n';\n\nmd += '## Human review checklist\\n\\n';\nmd += '### Assumptions to validate\\n';\nmd += textList(sow.humanReviewNotes?.assumptionsToValidate);\nmd += '\\n### Open questions\\n';\nmd += textList(sow.humanReviewNotes?.openQuestions);\nmd += '\\n### Decisions required\\n';\nmd += textList(sow.humanReviewNotes?.decisionsRequired);\nmd += '\\n';\n\nreturn md;",
+        "purpose": "Formats one costed SOW into a standalone human-reviewable Statement of Work document.",
+        "inputPorts": [
+          {
+            "id": "p0",
+            "label": "sowItem"
+          }
+        ]
+      }
+    },
+    {
+      "id": "13",
+      "position": {
+        "x": 11.885850708218058,
+        "y": 957.8500247098499
+      },
+      "data": {
+        "label": "Draft SOW document",
+        "nodeKind": "output",
+        "outputFormat": "docx",
+        "purpose": "One standalone DOCX Statement of Work for each deliverables/requirements document.",
+        "inputPorts": [
+          {
+            "id": "in",
+            "label": "input"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-1-3-p0",
+      "source": "1",
+      "target": "3",
+      "targetHandle": "p0"
+    },
+    {
+      "id": "e-2-3-p1",
+      "source": "2",
+      "target": "3",
+      "targetHandle": "p1"
+    },
+    {
+      "id": "e-6-3-p2",
+      "source": "6",
+      "target": "3",
+      "targetHandle": "p2"
+    },
+    {
+      "id": "e-3-7-p0",
+      "source": "3",
+      "target": "7",
+      "targetHandle": "p0"
+    },
+    {
+      "id": "e-6-7-p1",
+      "source": "6",
+      "target": "7",
+      "targetHandle": "p1"
+    },
+    {
+      "id": "e-7-10-p0",
+      "source": "7",
+      "target": "10",
+      "targetHandle": "p0"
+    },
+    {
+      "id": "e-10-11-in",
+      "source": "10",
+      "target": "11",
+      "targetHandle": "in"
+    },
+    {
+      "id": "e-11-12-p0",
+      "source": "11",
+      "target": "12",
+      "targetHandle": "p0"
+    },
+    {
+      "id": "e-12-13-in",
+      "source": "12",
+      "target": "13",
+      "targetHandle": "in"
+    }
+  ]
+}
